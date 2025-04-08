@@ -1,169 +1,205 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
 public class PlayerScript : MonoBehaviour
 {
-    // -{ Enum States }- \\
-    private enum State
+    // --{State Stuff :) }--
+
+     private enum State
     {
-        Walk,
-        Sprint,
-        Idle,
+        Walking,
+        Running,
     }
-
-    private State currentState = State.Idle;
-
-    // -{Vectors}- \\
+//  -{ Variables}-    
     Vector2 movement;
-    Vector2 mousemovement;
+    Vector2 mouseMovement;
+    float cameraUpRotation = 0.0f;
+    CharacterController controller;
+    bool hasJumped = false;
+    float ySpeed = 0;
 
-    // -{ Serialized Fields}- \\
+    Vector3 actual_movement;
+
+    private State currentState = State.Walking;
+
+    bool walking = false;
+
+    bool running = false;
+
+    
+    
+
+ 
+
+// -{Serialize Fields}-
+
 
     [SerializeField]
     float speed = 2.0f;
-
     [SerializeField]
     float mouseSensitivity = 100;
+
 
     [SerializeField]
     GameObject cam;
 
+
+    [SerializeField]
+    float JumpHeight = 1.0f;
+
     [SerializeField]
     float gravityVal = 9.8f;
-    
+
     [SerializeField]
+
     AudioSource walkingfootsteps;
 
     [SerializeField]
+
     AudioSource runningfootsteps;
 
-    // -{ Bools }- \\
+    [SerializeField]
+    float sprint = 2.0f;
 
-    bool isRunning = false;
-    bool isWalking = false;
-    bool hasJumped = false;
-
-    // -{ Remaining Variables}- \\
-
-    CharacterController controller;
-    float cameraUpRotation = 0;
-    float ySpeed = 0;
-
-    float JumpHeight = 1.0f;
-
-
-
-
+   
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(currentState)
-        {
-            case State.Idle:
-                OnIdle();
-                print("idle");
-                break;
-            case State.Walk:
-                print("walking");
-                OnWalk();
-                break;
-            case State.Sprint:
-                print("sprinting");
-                OnRun();
-                break;
-
-        }
-        float lookX = mousemovement.x * Time.deltaTime * mouseSensitivity;
-        float lookY = mousemovement.y * Time.deltaTime * mouseSensitivity;
+        //Camera
+        float lookX= mouseMovement.x * Time.deltaTime * mouseSensitivity;
+        float lookY= mouseMovement.y * Time.deltaTime * mouseSensitivity;
 
         cameraUpRotation -= lookY;
-        cameraUpRotation = Mathf.Clamp(cameraUpRotation, -90, 90);
 
-        cam.transform.localRotation = Quaternion.Euler(cameraUpRotation, 0, 0);
+        cameraUpRotation = Mathf.Clamp(cameraUpRotation , -90, 90);
 
+        cam.transform.localRotation = Quaternion.Euler(cameraUpRotation,0,0);
+
+
+       //Movement
         transform.Rotate(Vector3.up * lookX);
-    }
+        float moveX = movement.x;
+        float moveZ = movement.y;
+        
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            actual_movement = (transform.forward * moveZ) * sprint + (transform.right * moveX) * sprint;
+        }
+        else
+        {
+            actual_movement = (transform.forward * moveZ) + (transform.right * moveX);
+        }
+        
+
+        //Jumping
+
+        if (hasJumped)
+        {
+            hasJumped = false;
+            ySpeed = JumpHeight;
+            walkingfootsteps.volume = 0;
+            runningfootsteps.volume = 0;
+        }
+
+        ySpeed -= gravityVal * Time.deltaTime; 
+        actual_movement.y = ySpeed;
+    
+       controller.Move(actual_movement * speed * Time.deltaTime);
 
 
-    void OnLook(InputValue lookVal)
-    {
-        mousemovement = lookVal.Get<Vector2>();
-        print(mousemovement);
+       //Footsteps
+
+       switch(currentState)
+        {
+            case State.Walking:
+                OnWalk();
+                break;
+            case State.Running:
+                OnRun();
+                break;
+        }
+       
+
+         
+
 
     }
 
     void OnMove(InputValue moveVal)
     {
         movement = moveVal.Get<Vector2>();
+        
+        
+
     }
 
-    void MovePlayer(float player_speed)
+    void OnLook(InputValue lookVal)
     {
-        float moveX = movement.x;
-        float moveZ = movement.y;
-
-        Vector3 applied_movement = new Vector3 (moveX, 0, moveZ);
-        controller.Move(applied_movement * Time.deltaTime * speed);
+        mouseMovement = lookVal.Get<Vector2>();
 
     }
 
+    void OnJump()
+    {
+        if (controller.isGrounded)
+        {
+            hasJumped = true;
+            print("Jumping");   
+        }
+    }
 
-    // -States- \\
+
 
     void OnRun()
     {
-        //Audio
-        runningfootsteps.volume = 1;
-        walkingfootsteps.volume = 0;
-        MovePlayer(speed * 2);
-
-        if (!Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
-            currentState = State.Idle;
+            runningfootsteps.volume = 1;
+            walkingfootsteps.volume = 0;
+            running = true;
         }
 
-        if (!Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+
+        else
         {
-            currentState = State.Walk;
+            currentState=State.Walking;
+            running = false;
+            runningfootsteps.volume = 0;
+            print("running");
         }
+        
     }
 
     void OnWalk()
     {
-        //Audio
-        walkingfootsteps.volume = 1;
-        runningfootsteps.volume = 0;
-        MovePlayer(speed);
-        isWalking = true;
-        isRunning = false;
-
-        if (isWalking = true && Input.GetKey(KeyCode.LeftShift))
-        {
-            currentState = State.Sprint;
-            isRunning = true;
-        }
-    }
-
-    void OnIdle()
-    {
-        //Audio
-        runningfootsteps.volume = 0;
         walkingfootsteps.volume = 0;
+        runningfootsteps.volume = 0;
         
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
-            currentState = State.Walk;
-            isWalking = true;
+           walkingfootsteps.volume = 1;
+           runningfootsteps.volume = 0;
+           walking = true;
+
+        }
+        else
+        {
+            walkingfootsteps.volume = 0;
+            walking = false;
+        }
+
+        if (walking = true && Input.GetKey(KeyCode.LeftShift) )
+        {
+            currentState = State.Running;
         }
     }
-
-
 
 }
