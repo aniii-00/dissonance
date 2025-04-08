@@ -157,7 +157,7 @@ public class PlayerScript : MonoBehaviour
     }
 
 
-
+// Audio Stuff \\
     void OnRun()
     {
         if (Input.GetKey(KeyCode.LeftShift))
@@ -193,6 +193,7 @@ public class PlayerScript : MonoBehaviour
         else
         {
             walkingfootsteps.volume = 0;
+            runningfootsteps.volume = 0;
             walking = false;
         }
 
