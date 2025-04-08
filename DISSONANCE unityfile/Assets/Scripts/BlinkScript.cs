@@ -5,12 +5,17 @@ public class BlinkController : MonoBehaviour
     public Animator blinkAnimator;
     public string blinkTriggerName = "Blink"; // name of the trigger in Animator
 
+    void Start()
+    {
+  
+    }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q))
         {
-            blinkAnimator.SetTrigger(blinkTriggerName);
-            Debug.Log("BlinkPressed");
+            blinkAnimator.Play("blinking");
+            Debug.Log("blinking");
         }
+
     }
 }
