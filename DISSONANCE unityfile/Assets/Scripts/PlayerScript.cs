@@ -197,7 +197,7 @@ public class PlayerScript : MonoBehaviour
             walking = false;
         }
 
-        if (walking = true && Input.GetKey(KeyCode.LeftShift) )
+        if (walking && Input.GetKey(KeyCode.LeftShift) )
         {
             currentState = State.Running;
         }
