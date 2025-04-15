@@ -42,7 +42,7 @@ public class BlinkManager : MonoBehaviour
         if (isBlinking) return;
 
         isBlinking = true;
-        blinkAnimator.SetTrigger("Blink");
+        blinkAnimator.Play("blinking");
         Debug.Log("Blink triggered!");
 
         StartCoroutine(ResetAfterBlink());
