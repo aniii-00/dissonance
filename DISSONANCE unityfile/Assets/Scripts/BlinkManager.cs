@@ -4,15 +4,21 @@ using System.Collections;
 
 public class BlinkManager : MonoBehaviour
 {
+
+    // - { Basic Blink Variables }- \\
     public Slider blinkSlider;
     public Animator blinkAnimator;
     public float blinkTimer = 5f;
     public float decreaseRate = 1f;
-    public float blinkAnimationDuration = 1f; // ← set this in Inspector to match your animation length
+    public float blinkAnimationDuration = 1f;
 
     private float currentTime;
     private bool isBlinking = false;
 
+    // - { Mission #1 Variables } - \\
+    public int blinkLightThreshold = 5;
+    private int blinkCount = 0;
+    public Light[] lights;
     void Start()
     {
         ResetBlinkTimer();
@@ -37,17 +43,28 @@ public class BlinkManager : MonoBehaviour
         }
     }
 
+    // - { Basic Blink Mechanic } - \\
     void TriggerBlink()
     {
         if (isBlinking) return;
 
         isBlinking = true;
         blinkAnimator.Play("blinking");
-        Debug.Log("Blink triggered!");
+  
 
         StartCoroutine(ResetAfterBlink());
+
+    // - { Lights Turn Off} - \\
+        blinkCount++;
+        Debug.Log("Blink Count:" + blinkCount);
+
+        if (blinkCount >= blinkLightThreshold)
+        {
+            CutLights();
+        }
     }
 
+    // - { Blink Bar UI } - \\
     IEnumerator ResetAfterBlink()
     {
         yield return new WaitForSeconds(blinkAnimationDuration);
@@ -60,5 +77,14 @@ public class BlinkManager : MonoBehaviour
         blinkSlider.maxValue = blinkTimer;
         blinkSlider.value = currentTime;
         isBlinking = false;
+    }
+
+    // - { Mission # 1} - \\
+    void CutLights()
+    {
+        foreach (Light light in lights)
+        {
+            light.enabled = false;
+        }
     }
 }
