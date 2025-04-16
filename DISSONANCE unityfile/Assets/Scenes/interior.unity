@@ -411,7 +411,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9071705976553298789, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
       propertyPath: blinkTimer
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 9071705976553298789, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
       propertyPath: dialogueManager
@@ -420,6 +420,10 @@ PrefabInstance:
     - target: {fileID: 9071705976553298789, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
       propertyPath: lights.Array.size
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 9071705976553298789, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
+      propertyPath: blinkLightThreshold
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 9071705976553298789, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
       propertyPath: 'lights.Array.data[0]'
