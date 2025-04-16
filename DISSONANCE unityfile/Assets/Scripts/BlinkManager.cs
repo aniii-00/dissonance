@@ -19,6 +19,8 @@ public class BlinkManager : MonoBehaviour
     public int blinkLightThreshold = 5;
     private int blinkCount = 0;
     public Light[] lights;
+    public DialogueManager dialogueManager;
+
     void Start()
     {
         ResetBlinkTimer();
@@ -86,5 +88,9 @@ public class BlinkManager : MonoBehaviour
         {
             light.enabled = false;
         }
+
+        dialogueManager.StartDialogue(new string[] {
+            "...The lights? Seriously? I think I saw a flashlight downstairs. I pray that it doesn't need batteries."
+        });
     }
 }
