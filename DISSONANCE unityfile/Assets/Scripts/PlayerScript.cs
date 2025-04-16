@@ -60,12 +60,15 @@ public class PlayerScript : MonoBehaviour
     [SerializeField]
     float sprint = 2.0f;
 
+    public AudioSource frontDoor;
+
    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
+        frontDoor.Play();
         
     }
 
