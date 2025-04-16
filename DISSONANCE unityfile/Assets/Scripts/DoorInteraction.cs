@@ -5,7 +5,7 @@ public class DoorInteraction : MonoBehaviour
     public string requiredKey;
     public GameObject promptUI; 
     public DialogueManager dialogueManager;
-
+    public AudioSource doorLocked;
     private bool inRange = false;
     private KeyManager keyManager;
 
@@ -19,14 +19,10 @@ public class DoorInteraction : MonoBehaviour
     {
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            if (!keyManager.HasKey(requiredKey))
-            {
-                dialogueManager.StartDialogue(new string[] { "I need a key." });
-            }
-            else
-            {
-                OpenDoor();
-            }
+            doorLocked.Play();
+            dialogueManager.StartDialogue(new string[] { "The door is locked." });
+            
+
         }
     }
 
