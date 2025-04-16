@@ -43,6 +43,8 @@ public class DialogueManager : MonoBehaviour
         
         player.enabled = false;
         blinkManager.enabled = false;
+        player.walkingfootsteps.volume = 0;
+        player.runningfootsteps.volume = 0;
     }
 
     void AdvanceDialogue()

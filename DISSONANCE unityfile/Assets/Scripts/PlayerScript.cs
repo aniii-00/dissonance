@@ -51,11 +51,11 @@ public class PlayerScript : MonoBehaviour
 
     [SerializeField]
 
-    AudioSource walkingfootsteps;
+    public AudioSource walkingfootsteps;
 
     [SerializeField]
 
-    AudioSource runningfootsteps;
+    public AudioSource runningfootsteps;
 
     [SerializeField]
     float sprint = 2.0f;
