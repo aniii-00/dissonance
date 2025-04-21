@@ -9,6 +9,8 @@ public class DoorInteraction : MonoBehaviour
     private bool inRange = false;
     private KeyManager keyManager;
     public Animator DoorAnimation;
+    private bool isOpen = false;
+
 
     void Start()
     {
@@ -21,14 +23,17 @@ public class DoorInteraction : MonoBehaviour
 
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            if (keyManager.HasKey(requiredKey))
+            if (keyManager != null && keyManager.HasKey(requiredKey))
             {
                 OpenDoor();
             }
             else
             {
-                doorLocked.Play();
-                dialogueManager.StartDialogue(new string[] { "The door is locked." });
+                if (doorLocked != null)
+                    doorLocked.Play();
+
+                if (dialogueManager != null)
+                    dialogueManager.StartDialogue(new string[] { "The door is locked." });
             }
         }
 
@@ -39,6 +44,7 @@ public class DoorInteraction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
+            Debug.Log("entered");
             inRange = true;
             promptUI.SetActive(true);
         }
@@ -55,7 +61,11 @@ public class DoorInteraction : MonoBehaviour
 
     void OpenDoor()
     {
-        DoorAnimation.Play("LRDoorOpen");
-        Debug.Log("Door opened!");
+        if (!isOpen)
+        {
+            DoorAnimation.SetTrigger("Open");
+            isOpen = true;
+            promptUI.SetActive(false);
+        }
     }
 }
