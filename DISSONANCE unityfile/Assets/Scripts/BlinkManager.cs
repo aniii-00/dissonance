@@ -16,10 +16,15 @@ public class BlinkManager : MonoBehaviour
     private bool isBlinking = false;
 
     // - { Mission #1 Variables } - \\
-    public int blinkLightThreshold = 5;
+    public int blinkLightThreshold = 3;
+    public int blinkLRKeyThreshold = 5;
     private int blinkCount = 0;
     public Light[] lights;
     public DialogueManager dialogueManager;
+    public GameObject flashlight;
+    public GameObject livingRoomKey;
+
+
 
     void Start()
     {
@@ -64,6 +69,12 @@ public class BlinkManager : MonoBehaviour
         {
             CutLights();
         }
+
+        if (blinkCount >= blinkLRKeyThreshold)
+        {
+            RevealKey();
+        }
+
     }
 
     // - { Blink Bar UI } - \\
@@ -89,8 +100,25 @@ public class BlinkManager : MonoBehaviour
             light.enabled = false;
         }
 
+ 
+
         dialogueManager.StartDialogue(new string[] {
             "...The lights? Seriously? I think I saw a flashlight downstairs. I pray that it doesn't need batteries."
-        });
+        });  
+        
+
+        if (flashlight != null)
+        {
+            flashlight.SetActive(true);
+        }
+    }
+
+    void RevealKey()
+    {
+        if (livingRoomKey != null)
+        {
+            livingRoomKey.SetActive(true);
+        }
+
     }
 }

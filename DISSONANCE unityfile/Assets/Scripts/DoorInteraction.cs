@@ -8,6 +8,7 @@ public class DoorInteraction : MonoBehaviour
     public AudioSource doorLocked;
     private bool inRange = false;
     private KeyManager keyManager;
+    public Animator DoorAnimation;
 
     void Start()
     {
@@ -17,13 +18,21 @@ public class DoorInteraction : MonoBehaviour
 
     void Update()
     {
+
         if (inRange && Input.GetKeyDown(KeyCode.E))
         {
-            doorLocked.Play();
-            dialogueManager.StartDialogue(new string[] { "The door is locked." });
-            
-
+            if (keyManager.HasKey(requiredKey))
+            {
+                OpenDoor();
+            }
+            else
+            {
+                doorLocked.Play();
+                dialogueManager.StartDialogue(new string[] { "The door is locked." });
+            }
         }
+
+
     }
 
     void OnTriggerEnter(Collider other)
@@ -46,7 +55,7 @@ public class DoorInteraction : MonoBehaviour
 
     void OpenDoor()
     {
-        // You'll implement this later
+        DoorAnimation.Play("LRDoorOpen");
         Debug.Log("Door opened!");
     }
 }
