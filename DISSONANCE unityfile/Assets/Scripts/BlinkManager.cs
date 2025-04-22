@@ -65,15 +65,11 @@ public class BlinkManager : MonoBehaviour
         blinkCount++;
         Debug.Log("Blink Count:" + blinkCount);
 
-        if (blinkCount >= blinkLightThreshold)
+        if (blinkCount == blinkLightThreshold)
         {
             CutLights();
         }
 
-        if (blinkCount >= blinkLRKeyThreshold)
-        {
-            RevealKey();
-        }
 
     }
 
@@ -113,12 +109,4 @@ public class BlinkManager : MonoBehaviour
         }
     }
 
-    void RevealKey()
-    {
-        if (livingRoomKey != null)
-        {
-            livingRoomKey.SetActive(true);
-        }
-
-    }
 }
