@@ -2,51 +2,37 @@ using UnityEngine;
 
 public class DoorInteraction : MonoBehaviour
 {
+    [Header("Key Setup")]
+    [Tooltip("Exact name of the key required to open this door")]
     public string requiredKey;
-    public GameObject promptUI; 
-    public DialogueManager dialogueManager;
-    public AudioSource doorLocked;
-    private bool inRange = false;
-    private KeyManager keyManager;
-    public Animator DoorAnimation;
-    private bool isOpen = false;
 
+    [Header("UI & Audio")]
+    public GameObject promptUI; 
+    public AudioSource doorLockedSound;
+    public DialogueManager dialogueManager;
+
+    [Header("Animation")]
+    public Animator doorAnimator;
+
+    private KeyManager keyManager;
+    private bool playerInRange = false;
+    private bool isOpen = false;
+    public AudioSource doorOpenSound;
 
     void Start()
     {
-        keyManager = GameObject.FindWithTag("Player").GetComponent<KeyManager>();
-        promptUI.SetActive(false);
-    }
-
-    void Update()
-    {
-
-        if (inRange && Input.GetKeyDown(KeyCode.E))
-        {
-            if (keyManager != null && keyManager.HasKey(requiredKey))
-            {
-                OpenDoor();
-            }
-            else
-            {
-                if (doorLocked != null)
-                    doorLocked.Play();
-
-                if (dialogueManager != null)
-                    dialogueManager.StartDialogue(new string[] { "The door is locked." });
-            }
-        }
-
-
+        // Cache references
+        keyManager = GameObject.FindWithTag("Player").GetComponentInChildren<KeyManager>();
+        if (promptUI) promptUI.SetActive(false);
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("entered");
-            inRange = true;
-            promptUI.SetActive(true);
+            Debug.Log($"[Door] Player entered range of '{gameObject.name}'");
+            playerInRange = true;
+            if (promptUI) promptUI.SetActive(true);
         }
     }
 
@@ -54,18 +40,73 @@ public class DoorInteraction : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            inRange = false;
-            promptUI.SetActive(false);
+            playerInRange = false;
+            if (promptUI) promptUI.SetActive(false);
+        }
+    }
+
+    void Update()
+    {
+        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        {
+            TryOpenDoor();
+        }
+    }
+
+    void TryOpenDoor()
+    {
+        Debug.Log($"[Door] Attempting open '{gameObject.name}' with key '{requiredKey}'");
+        if (keyManager == null)
+        {
+            Debug.LogError("[Door] KeyManager not found on Player!");
+            return;
+        }
+
+        if (keyManager.HasKey(requiredKey))
+        {
+            OpenDoor();
+        }
+        else
+        {
+            LockedDoor();
         }
     }
 
     void OpenDoor()
     {
-        if (!isOpen)
+        if (isOpen) return;
+
+        isOpen = true;
+
+        if (doorAnimator != null)
         {
-            DoorAnimation.SetTrigger("Open");
-            isOpen = true;
+            doorAnimator.SetTrigger("Open");
+        }
+
+        if (promptUI)
+        {
             promptUI.SetActive(false);
         }
+
+        if (doorOpenSound != null)
+        {
+            doorOpenSound.Play();
+        }
+
+
+
+        Debug.Log($"[Door] '{gameObject.name}' opened!");
+    }
+
+    void LockedDoor()
+    {
+        doorLockedSound.Play();
+        
+        if (dialogueManager != null)
+        {
+            dialogueManager.StartDialogue(new[] { "The door is locked." });
+        }
+
+        Debug.Log($"[Door] '{gameObject.name}' is locked—no key '{requiredKey}' in inventory.");
     }
 }

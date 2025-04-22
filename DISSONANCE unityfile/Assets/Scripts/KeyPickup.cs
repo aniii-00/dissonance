@@ -2,33 +2,34 @@ using UnityEngine;
 
 public class KeyPickup : MonoBehaviour
 {
-    public string keyName;
-    public GameObject PickupUI;
+    public string keyName = "LivingRoomKey";
+    public KeyManager keyManager;
+    public GameObject promptUI;
+    public DialogueManager dialogueManager;
+
     private bool playerInRange = false;
-    private KeyManager keyManager;
+    private bool hasPickedUpKey = false;
+    public GameObject key;
 
     void Start()
     {
-        keyManager = GameObject.FindWithTag("Player").GetComponent<KeyManager>();
-        PickupUI.SetActive(false);
+        promptUI.SetActive(false);
     }
 
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && !hasPickedUpKey && !dialogueManager.IsDialogueActive())
         {
-            keyManager.AddKey(keyName);
-            PickupUI.SetActive(false);
-            Destroy(gameObject);
+            PickUpKey();
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !hasPickedUpKey)
         {
             playerInRange = true;
-            PickupUI.SetActive(true);
+            promptUI.SetActive(true);
         }
     }
 
@@ -37,7 +38,17 @@ public class KeyPickup : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-            PickupUI.SetActive(false);
+            promptUI.SetActive(false);
         }
+    }
+
+    void PickUpKey()
+    {
+        hasPickedUpKey = true;
+        keyManager.AddKey(keyName);
+        promptUI.SetActive(false);
+        key.SetActive(false);
+
+        Debug.Log($"{keyName} picked up!");
     }
 }

@@ -9,6 +9,7 @@ public class FlashlightToggle : MonoBehaviour
 
     public Light flashlightbulb;
     public GameObject flashlightUI;
+    public AudioSource lightSound;
 
     void Start()
     {
@@ -29,6 +30,7 @@ public class FlashlightToggle : MonoBehaviour
             flashlightOn = !flashlightOn;
             flashlightbulb.enabled = flashlightOn;
             UpdateIcon();
+            lightSound.Play();
         }
     }
 
@@ -38,4 +40,5 @@ public class FlashlightToggle : MonoBehaviour
         iconColor.a = flashlightOn ? 1f : 0.3f; 
         flashlightIcon.color = iconColor;
     }
+    
 }

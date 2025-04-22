@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
+
 public class BlinkManager : MonoBehaviour
 {
 
@@ -23,6 +24,7 @@ public class BlinkManager : MonoBehaviour
     public DialogueManager dialogueManager;
     public GameObject flashlight;
     public GameObject livingRoomKey;
+    
 
 
 
@@ -102,6 +104,8 @@ public class BlinkManager : MonoBehaviour
             "...The lights? Seriously? I think I saw a flashlight downstairs. I pray that it doesn't need batteries."
         });  
         
+        TaskManager taskManager = GameObject.Find("TaskManager").GetComponent<TaskManager>();
+        taskManager.UpdateTask("Find a flashlight.");
 
         if (flashlight != null)
         {

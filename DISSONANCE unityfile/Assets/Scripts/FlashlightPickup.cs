@@ -3,45 +3,29 @@ using UnityEngine;
 public class FlashlightPickup : MonoBehaviour
 {
     public GameObject promptUI;
-    public GameObject flashlightObject; //  attached to the player 
-    private bool playerInRange = false;
-    public GameObject livingRoomKey;
-    public GameObject TableLight; // flashlight on table
+    public GameObject flashlightObject; 
+    public GameObject TableLight; 
     public DialogueManager dialogueManager;
     public GameObject flashlightUI;
     public FlashlightToggle flashlightToggleScript;
 
+    private bool playerInRange = false;
+    private bool hasPickedUpFlashlight = false;
+
+    public GameObject livingRoomKey; // reference to key so we can enable it
+
     void Start()
     {
         promptUI.SetActive(false);
-        livingRoomKey.SetActive(false);
         flashlightUI.SetActive(false);
-
+        livingRoomKey.SetActive(false); // hide key at start
     }
 
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        if (playerInRange && Input.GetKeyDown(KeyCode.E) && !hasPickedUpFlashlight)
         {
-            // Flashlight Sutff
-            flashlightObject.SetActive(true); 
-            promptUI.SetActive(false);
-            Destroy(TableLight);
-
-            //Flashlight Icon Stuff
-            flashlightUI.SetActive(true);
-            flashlightToggleScript.enabled = true;
-            Color iconColor = flashlightToggleScript.flashlightIcon.color;
-            iconColor.a = 0.3f; 
-            flashlightToggleScript.flashlightIcon.color = iconColor;
-
-            //Key Stuff
-            RevealKey();
-            dialogueManager.StartDialogue(new string[] 
-            {
-            "Oh... There's a key. I wonder what this is for."
-            });  
-            
+            EquipFlashlight();
         }
     }
 
@@ -63,12 +47,32 @@ public class FlashlightPickup : MonoBehaviour
         }
     }
 
-    void RevealKey()
+    void EquipFlashlight()
     {
-        if (livingRoomKey != null)
-        {
-            livingRoomKey.SetActive(true);
-        }
+        hasPickedUpFlashlight = true;
 
+        flashlightObject.SetActive(true);
+        TableLight.SetActive(false);
+        promptUI.SetActive(false);
+
+        flashlightUI.SetActive(true);
+        flashlightToggleScript.enabled = true;
+
+        Color iconColor = flashlightToggleScript.flashlightIcon.color;
+        iconColor.a = 0.3f;
+        flashlightToggleScript.flashlightIcon.color = iconColor;
+
+        RevealKeyAndStartDialogue();
+
+        Debug.Log("Flashlight equipped.");
+    }
+
+    void RevealKeyAndStartDialogue()
+    {
+        livingRoomKey.SetActive(true); // Key is now visible & pickable
+        dialogueManager.StartDialogue(new string[]
+        {
+            "Oh... There's a key. I wonder what this is for.  [YOU'VE PICKED UP A KEY.]"
+        });
     }
 }
