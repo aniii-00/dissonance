@@ -18,6 +18,15 @@ public class DoorInteraction : MonoBehaviour
     private bool playerInRange = false;
     private bool isOpen = false;
     public AudioSource doorOpenSound;
+    
+    [Header("Entry Dialogue")]
+    public bool isFirstEntryDoor = false;
+    [TextArea]
+    public string[] entryDialogueLines;
+
+    private bool entryDialogueTriggered = false;
+
+
 
     void Start()
     {
@@ -45,6 +54,8 @@ public class DoorInteraction : MonoBehaviour
             {
                 promptUI.SetActive(true);
             }
+
+             
         }
     }
 
@@ -101,6 +112,16 @@ public class DoorInteraction : MonoBehaviour
         {
             doorOpenSound.Play();
         }
+
+        if (isFirstEntryDoor && !entryDialogueTriggered && isOpen)
+            {
+                entryDialogueTriggered = true;
+
+                if (dialogueManager != null && entryDialogueLines.Length > 0)
+                {
+                    dialogueManager.StartDialogue(entryDialogueLines);
+                }
+            }
 
     }
 

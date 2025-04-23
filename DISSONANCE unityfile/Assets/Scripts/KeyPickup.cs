@@ -6,10 +6,11 @@ public class KeyPickup : MonoBehaviour
     public KeyManager keyManager;
     public GameObject promptUI;
     public DialogueManager dialogueManager;
+    public TaskManager taskManager;
     
 
     private bool playerInRange = false;
-    private bool hasPickedUpKey = false;
+    public bool hasPickedUpKey = false;
     public GameObject key;
     
 
@@ -23,6 +24,7 @@ public class KeyPickup : MonoBehaviour
         if (playerInRange && Input.GetKeyDown(KeyCode.E) && !hasPickedUpKey && !dialogueManager.IsDialogueActive())
         {
             PickUpKey();
+            taskManager.UpdateTask("What is this key for?");
         }
     }
 

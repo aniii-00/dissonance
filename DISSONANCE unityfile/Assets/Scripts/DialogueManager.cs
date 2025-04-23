@@ -53,7 +53,7 @@ public class DialogueManager : MonoBehaviour
         while (isActive)
         {
             canAdvance = true;
-            yield return new WaitForSeconds(3f); // Delay before auto-advancing
+            yield return new WaitForSeconds(10f); // Delay before auto-advancing
 
             if (isActive) // still valid after delay
                 AdvanceDialogue();
