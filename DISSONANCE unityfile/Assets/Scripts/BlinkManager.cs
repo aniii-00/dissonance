@@ -53,7 +53,7 @@ public class BlinkManager : MonoBehaviour
     }
 
     // - { Basic Blink Mechanic } - \\
-    void TriggerBlink()
+    public void TriggerBlink()
     {
         if (isBlinking) return;
 

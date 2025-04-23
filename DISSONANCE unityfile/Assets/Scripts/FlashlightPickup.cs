@@ -8,9 +8,11 @@ public class FlashlightPickup : MonoBehaviour
     public DialogueManager dialogueManager;
     public GameObject flashlightUI;
     public FlashlightToggle flashlightToggleScript;
+    public BlinkManager blinkManager;
 
     private bool playerInRange = false;
     private bool hasPickedUpFlashlight = false;
+    public TaskManager taskManager;
 
     public GameObject livingRoomKey; // reference to key so we can enable it
 
@@ -70,9 +72,11 @@ public class FlashlightPickup : MonoBehaviour
     void RevealKeyAndStartDialogue()
     {
         livingRoomKey.SetActive(true); // Key is now visible & pickable
+        blinkManager.TriggerBlink();
+        taskManager.UpdateTask("What is this key for?");
         dialogueManager.StartDialogue(new string[]
         {
-            "Oh... There's a key. I wonder what this is for.  [YOU'VE PICKED UP A KEY.]"
+            "Oh... There's a key. I wonder what this is for."
         });
     }
 }

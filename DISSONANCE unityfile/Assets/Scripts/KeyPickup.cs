@@ -6,10 +6,12 @@ public class KeyPickup : MonoBehaviour
     public KeyManager keyManager;
     public GameObject promptUI;
     public DialogueManager dialogueManager;
+    
 
     private bool playerInRange = false;
     private bool hasPickedUpKey = false;
     public GameObject key;
+    
 
     void Start()
     {
@@ -48,7 +50,11 @@ public class KeyPickup : MonoBehaviour
         keyManager.AddKey(keyName);
         promptUI.SetActive(false);
         key.SetActive(false);
-
         Debug.Log($"{keyName} picked up!");
+
+        if (dialogueManager != null)
+        {
+            dialogueManager.StartDialogue(new[] { "[ YOU'VE PICKED UP A KEY. ]" });
+        }
     }
 }
