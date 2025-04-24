@@ -1,18 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerInventory : MonoBehaviour
+public class KeyManager : MonoBehaviour
 {
-    public List<string> keys = new List<string>();
-
-    public bool HasKey(string keyName)
-    {
-        return keys.Contains(keyName);
-    }
+    private List<string> keys = new List<string>();
 
     public void AddKey(string keyName)
     {
         if (!keys.Contains(keyName))
+        {
             keys.Add(keyName);
+            Debug.Log("Picked up key: " + keyName);
+        }
+    }
+
+    public bool HasKey(string keyName)
+    {
+        return keys.Contains(keyName);
     }
 }
