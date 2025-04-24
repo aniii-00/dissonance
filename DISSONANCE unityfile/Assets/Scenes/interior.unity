@@ -500,7 +500,7 @@ PrefabInstance:
       insertIndex: 6
       addedObject: {fileID: 531050489}
     - targetCorrespondingSourceObject: {fileID: 4981378941906304327, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
-      insertIndex: -1
+      insertIndex: 7
       addedObject: {fileID: 621361996}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6f999bff48e3498ea66b322f949cea7, type: 3}
@@ -7027,10 +7027,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 2
-  mouseSensitivity: 20
+  mouseSensitivity: 10
   cam: {fileID: 330585543}
   JumpHeight: 2
-  gravityVal: 9.8
+  gravityVal: 8.5
   walkingfootsteps: {fileID: 460417912}
   runningfootsteps: {fileID: 1648671332}
   sprint: 2
