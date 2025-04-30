@@ -10,6 +10,12 @@ public class Button : MonoBehaviour
         SceneManager.LoadScene("interior");
     }
 
+    void Start()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
 }
 
 

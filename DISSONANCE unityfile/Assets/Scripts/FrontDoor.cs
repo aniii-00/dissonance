@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class FrontDoor : MonoBehaviour
 {
@@ -12,13 +14,15 @@ public class FrontDoor : MonoBehaviour
     public bool leaving = false;
     public TaskManager taskManager;
 
-    public GameObject gameover;
+    
 
     private bool dialogueTriggered = false;
+    public GameObject gameOverUI;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         promptUI.SetActive(false);
+        gameOverUI.SetActive(false);
     }
 
     // Update is called once per frame
@@ -31,12 +35,15 @@ public class FrontDoor : MonoBehaviour
 
         if (inRange && Input.GetKeyDown(KeyCode.E) && !leaving)
         {
-            dialogueManager.StartDialogue(new string[] { "I don't want to leave... Not yet." }); 
+            dialogueManager.StartDialogue(new string[] { "I don't want to leave... Not yet." });
+            
         }
         
         if (dialogueTriggered == true)
         {
-            DemonScream();
+            StartCoroutine(DelayedDemonScream());
+            dialogueTriggered = false;
+            Debug.Log("triggered");
         }
        
     }
@@ -59,11 +66,24 @@ public class FrontDoor : MonoBehaviour
         }
     }
 
-    void DemonScream()
+    IEnumerator DelayedDemonScream()
     {
+        yield return new WaitForSeconds(2f); 
+
+        gasp.Play();
         scream.Play();
         taskManager.UpdateTask("Investigate the scream.");
-        dialogueManager.StartDialogue(new[] {"There's nowhere to hide... but I think the scream came from upstairs. I should make sure they're okay... right? "});
+        dialogueManager.StartDialogue(new[] {
+            "There's nowhere to hide... but I think the scream came from upstairs. I should make sure they're okay... right?"
+        });
+
+        yield return new WaitForSeconds(5f);
+
+        gameOverUI.SetActive(true); 
+
+        yield return new WaitForSeconds(3f);
+
+        SceneManager.LoadScene("main menu");
     }
 
     void LockedDoor()
@@ -71,7 +91,7 @@ public class FrontDoor : MonoBehaviour
         dialogueManager.StartDialogue(new string[] { "Oh my god... the door is locked." }); 
         doorLocked.Play();
         dialogueTriggered = true;
-        gasp.Play();
+        
     }
 
 }
