@@ -25,6 +25,7 @@ public class DoorInteraction : MonoBehaviour
     public string[] entryDialogueLines;
 
     private bool entryDialogueTriggered = false;
+    public TaskManager taskManager;
 
 
 
@@ -120,7 +121,9 @@ public class DoorInteraction : MonoBehaviour
                 if (dialogueManager != null && entryDialogueLines.Length > 0)
                 {
                     dialogueManager.StartDialogue(entryDialogueLines);
+                    
                 }
+                taskManager.UpdateTask("Investigate the living room.");
             }
 
     }

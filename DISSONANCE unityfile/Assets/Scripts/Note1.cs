@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 
 
-public class NoteManager : MonoBehaviour
+public class Note1 : MonoBehaviour
 {
     public FlashlightPickup flashlightPickup;
     public KeyPickup keyPickup;
@@ -13,6 +13,8 @@ public class NoteManager : MonoBehaviour
     private bool playerInRange = false;
     private bool pickedup = false;
     private bool isNoteUnlocked = false;
+    public PlayerScript player;
+    public DialogueManager dialogueManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -25,7 +27,7 @@ public class NoteManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerInRange && Input.GetKeyDown(KeyCode.E) && isNoteUnlocked)
+        if (playerInRange && !dialogueManager.IsDialogueActive() && Input.GetKeyDown(KeyCode.E) && isNoteUnlocked)
         {
             ToggleNote();
         }
@@ -36,6 +38,16 @@ public class NoteManager : MonoBehaviour
             physicalnote.SetActive(true);
             isNoteUnlocked = true;
             
+        }
+
+        if (pickedup)
+        {
+            player.enabled = false;
+            player.walkingfootsteps.volume = 0;
+            player.runningfootsteps.volume = 0;
+        } else if (!dialogueManager.IsDialogueActive())
+        {
+            return;
         }
     }
 

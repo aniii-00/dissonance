@@ -19,6 +19,7 @@ public class DialogueManager : MonoBehaviour
     {
         dialogueUI.SetActive(false);
         Invoke("StartOpeningDialogue", 1f);
+        
     }
 
     void Update()
@@ -53,9 +54,9 @@ public class DialogueManager : MonoBehaviour
         while (isActive)
         {
             canAdvance = true;
-            yield return new WaitForSeconds(10f); // Delay before auto-advancing
+            yield return new WaitForSeconds(10f); 
 
-            if (isActive) // still valid after delay
+            if (isActive) 
                 AdvanceDialogue();
         }
     }
@@ -70,7 +71,7 @@ public class DialogueManager : MonoBehaviour
 
     void AdvanceDialogue()
     {
-        canAdvance = false;
+        canAdvance = true;
         currentLine++;
 
         if (currentLine < dialogueLines.Length)
@@ -83,7 +84,7 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    void EndDialogue()
+    public void EndDialogue()
     {
         isActive = false;
         canAdvance = false;
